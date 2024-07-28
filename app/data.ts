@@ -29,9 +29,19 @@ export const getCharacters = async (): Promise<string[]> => {
 	const response = await fetch(url);
 	const data: CharacterQuotes[] = await response.json();
 	if (!data) {
-		throw new Response("Not Found", { status: 404 });
+		throw new Response("Characters not found", { status: 404 });
 	}
 	return data.map((character) => character.name).sort(sortBy("name"));
+};
+
+export const getCharacterQuote = async (character: string): Promise<CharacterQuotes> => {
+	const url = `${BASE_URL}/character/${character}`;
+	const response = await fetch(url);
+	const data: CharacterQuotes = await response.json();
+	if (!data) {
+		throw new Response("Character not Found", { status: 404 });
+	}
+	return data;
 };
 
 export const getRandomQuote = async (): Promise<RandomQuote> => {

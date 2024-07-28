@@ -7,12 +7,14 @@ import {
 	Outlet,
 	Scripts,
 	ScrollRestoration,
-	useLoaderData
+	useLoaderData,
+	useNavigation
 } from "@remix-run/react";
 import "./tailwind.css";
 import { findSlugByName, getCharacters } from "./data";
 import { ChangeEvent, useEffect, useState } from "react";
 import { sortBy } from "sort-by-typescript";
+import { LoaderIcon } from "lucide-react";
 
 export const loader = async () => {
 	const characters = await getCharacters();
@@ -25,6 +27,7 @@ export const loader = async () => {
 export function Layout({ children }: { children: React.ReactNode }) {
 	const { characters, characterNames } = useLoaderData<typeof loader>();
 	const [filteredNames, setFilteredNames] = useState<string[]>(characterNames);
+	const navigation = useNavigation();
 
 	const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value.toLowerCase();
@@ -88,7 +91,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 							)}
 						</ul>
 					</nav>
-					{children}
+					{navigation.state === "loading" ? (
+						<div className="flex justify-center items-center">
+							<LoaderIcon className="animate-spin" size={30} />
+						</div>
+					) : (
+						children
+					)}
 				</main>
 				<ScrollRestoration />
 				<Scripts />

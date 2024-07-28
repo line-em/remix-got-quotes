@@ -48,9 +48,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				<Meta />
 				<Links />
 			</head>
-			<body className="p-6">
-				<main className="grid sm:grid-cols-[minmax(150px,200px)_1fr] gap-12 sm:gap-6 w-full max-h-screen grid-cols-1 bg-base-300 rounded-box p-6">
-					<nav className="flex flex-col justify-start gap-2 sm:h-[calc(100vh-6rem)]">
+			<body className="p-6 relative">
+				<main className="grid sm:grid-cols-[minmax(150px,200px)_1fr] gap-12 sm:gap-6 w-full max-h-screen grid-cols-1 bg-base-300 rounded-box p-6 overflow-y-scroll sm:h-[calc(100vh-5rem)]">
+					<nav className="flex flex-col justify-start self-start gap-2 sticky top-0">
 						<Form id="search" role="search">
 							<input
 								type="search"

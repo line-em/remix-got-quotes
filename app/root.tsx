@@ -3,6 +3,7 @@ import {
 	json,
 	Links,
 	Meta,
+	NavLink,
 	Outlet,
 	Scripts,
 	ScrollRestoration,
@@ -59,7 +60,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
 							{filteredChars.length
 								? filteredChars.map((character) => (
 										<li className="" key={character}>
-											<a href="{character}">{character}</a>
+											<NavLink
+												className={({ isActive, isPending }) =>
+													isActive
+														? "active"
+														: isPending
+														? "pending"
+														: ""
+												}
+												to={`quotes/${character}`}
+											>
+												{character}
+											</NavLink>
 										</li>
 								  ))
 								: "No characters found!"}

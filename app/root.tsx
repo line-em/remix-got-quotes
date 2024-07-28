@@ -10,7 +10,7 @@ import {
 } from "@remix-run/react";
 import "./tailwind.css";
 import { getCharacters } from "./data";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 export const loader = async () => {
 	const characters = await getCharacters();
@@ -22,13 +22,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
 	const [filteredChars, setFilteredChars] = useState<string[]>(characters);
 
 	const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-		const {
-			target: { value }
-		} = e;
-		setFilteredChars(
-			characters.filter((char) => char.toLowerCase().includes(value.toLowerCase()))
-		);
+		const value = e.target.value.toLowerCase();
+		setFilteredChars(characters.filter((char) => char.toLowerCase().includes(value)));
 	};
+
+	useEffect(() => {
+		const searchField = document.getElementById("query");
+		if (searchField instanceof HTMLInputElement) {
+			searchField.value = "";
+		}
+	}, []);
 
 	return (
 		<html lang="en">
@@ -53,12 +56,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 						</Form>
 						<ul className="menu menu-m bg-base-200 rounded-box overflow-y-scroll max-h-[40vh] sm:max-h-[80vh] flex-nowrap">
 							<li className="menu-title">Characters</li>
-							{filteredChars.length &&
-								filteredChars.map((character) => (
-									<li className="" key={character}>
-										<a href="{character}">{character}</a>
-									</li>
-								))}
+							{filteredChars.length
+								? filteredChars.map((character) => (
+										<li className="" key={character}>
+											<a href="{character}">{character}</a>
+										</li>
+								  ))
+								: "No characters found!"}
 						</ul>
 					</nav>
 					{children}

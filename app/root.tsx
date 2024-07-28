@@ -1,4 +1,5 @@
 import {
+	Form,
 	json,
 	Links,
 	Meta,
@@ -9,7 +10,7 @@ import {
 } from "@remix-run/react";
 import "./tailwind.css";
 import { getCharacters } from "./data";
-import { Crown } from "lucide-react";
+import { ChangeEvent, useState } from "react";
 
 export const loader = async () => {
 	const characters = await getCharacters();
@@ -18,6 +19,16 @@ export const loader = async () => {
 
 export function Layout({ children }: { children: React.ReactNode }) {
 	const characters = useLoaderData<typeof loader>();
+	const [filteredChars, setFilteredChars] = useState<string[]>(characters);
+
+	const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+		const {
+			target: { value }
+		} = e;
+		setFilteredChars(
+			characters.filter((char) => char.toLowerCase().includes(value.toLowerCase()))
+		);
+	};
 
 	return (
 		<html lang="en">
@@ -27,16 +38,28 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				<Meta />
 				<Links />
 			</head>
-			<body>
-				<main className="grid grid-cols-[minmax(150px,200px)_1fr] gap-y-2 w-full max-h-screen h-full">
-					<nav className="flex flex-col justify-center h-screen">
-						<div className="join join-vertical overflow-y-auto max-h-[80vh]">
-							{characters.map((character) => (
-								<button className="btn join-item" key={character}>
-									{character}
-								</button>
-							))}
-						</div>
+			<body className="p-6">
+				<main className="grid sm:grid-cols-[minmax(150px,200px)_1fr] gap-12 sm:gap-6 w-full max-h-screen grid-cols-1 bg-base-300 rounded-box p-6">
+					<nav className="flex flex-col justify-start gap-2 sm:h-[calc(100vh-6rem)]">
+						<Form id="search" role="search">
+							<input
+								type="search"
+								placeholder="Search Character"
+								className="input input-sm w-full"
+								id="query"
+								name="query"
+								onChange={(e) => handleSearch(e)}
+							/>
+						</Form>
+						<ul className="menu menu-m bg-base-200 rounded-box overflow-y-scroll max-h-[40vh] sm:max-h-[80vh] flex-nowrap">
+							<li className="menu-title">Characters</li>
+							{filteredChars.length &&
+								filteredChars.map((character) => (
+									<li className="" key={character}>
+										<a href="{character}">{character}</a>
+									</li>
+								))}
+						</ul>
 					</nav>
 					{children}
 				</main>

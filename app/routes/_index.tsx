@@ -1,7 +1,7 @@
 import { json, type MetaFunction } from "@remix-run/node";
 import { getRandomQuote } from "../data";
 import { useLoaderData } from "@remix-run/react";
-import { BookHeart, Quote, User } from "lucide-react";
+import { Quote, User } from "lucide-react";
 
 export const meta: MetaFunction = () => {
 	return [
@@ -31,14 +31,16 @@ export default function Index() {
 			<figure className="bg-base-200 p-6 rounded-lg min-w-[30ch] text-center">
 				<blockquote className="flex flex-col items-center">
 					<Quote size={30} fill="white" strokeWidth={0} />
-					<p className="text-white-800 sm:text-xl text-2xl italic font-medium max-w-[70ch]">
+					<p className="text-white-800 sm:text-xl text-sm italic font-medium max-w-[70ch]">
 						{sentence}
 					</p>
 				</blockquote>
 				<figcaption className="flex items-center justify-center mt-6 gap-2">
 					<User size={30} fill="white" strokeWidth={0} />
 					<div className="flex flex-col items-center">
-						<cite className="font-medium text-accent">{characterName}</cite>
+						<cite className="font-medium text-accent text-sm sm:text-medium">
+							{characterName}
+						</cite>
 						<cite className="text-sm text-white">{houseName}</cite>
 					</div>
 				</figcaption>

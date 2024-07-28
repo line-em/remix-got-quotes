@@ -1,4 +1,4 @@
-import sortBy from "sort-by";
+import { sortBy } from "sort-by-typescript";
 
 type CharacterQuotes = {
 	name: string;
@@ -17,6 +17,5 @@ export async function getCharacters(): Promise<string[]> {
 	if (!data) {
 		throw new Response("Not Found", { status: 404 });
 	}
-	console.log(data);
 	return data.map((character) => character.name).sort(sortBy("name"));
 }

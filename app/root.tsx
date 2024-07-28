@@ -9,6 +9,7 @@ import {
 } from "@remix-run/react";
 import "./tailwind.css";
 import { getCharacters } from "./data";
+import { Crown } from "lucide-react";
 
 export const loader = async () => {
 	const characters = await getCharacters();
@@ -27,15 +28,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				<Links />
 			</head>
 			<body>
-				<main className="grid grid-rows-[auto_1fr] grid-cols-[minmax(150px,200px)_1fr] gap-4 w-full h-[100vh]">
-					<header className="col-span-2 p-2">Game of Thrones Quotes</header>
-					<nav className="flex flex-col gap-4 align-center justify-start">
-						<div className="join join-vertical">
+				<main className="grid grid-rows-[auto_1fr] grid-cols-[minmax(150px,200px)_1fr] w-full h-[96vh]">
+					<header className="col-span-2 pt-2 pb-2 bg-base-300 flex gap-4 align-center justify-center">
+						<Crown />
+						Game of Thrones Quotes
+					</header>
+					<nav className="flex flex-col gap-4 align-center justify-start h-[97vh]">
+						<div className="join join-vertical max-h-screen overflow-y-auto">
 							{characters.map((character) => (
-								<button
-									className="btn join-item"
-									key={character}
-								>
+								<button className="btn join-item" key={character}>
 									{character}
 								</button>
 							))}

@@ -10,12 +10,32 @@ type CharacterQuotes = {
 	quotes: string[];
 };
 
-export async function getCharacters(): Promise<string[]> {
-	const url = "https://api.gameofthronesquotes.xyz/v1/characters";
+type RandomQuote = {
+	sentence: string;
+	character: {
+		name: string;
+		slug: string;
+		house: {
+			name: string;
+			slug: string;
+		};
+	};
+};
+
+const BASE_URL = "https://api.gameofthronesquotes.xyz/v1";
+
+export const getCharacters = async (): Promise<string[]> => {
+	const url = `${BASE_URL}/characters`;
 	const response = await fetch(url);
 	const data: CharacterQuotes[] = await response.json();
 	if (!data) {
 		throw new Response("Not Found", { status: 404 });
 	}
 	return data.map((character) => character.name).sort(sortBy("name"));
-}
+};
+
+export const getRandomQuote = async (): Promise<RandomQuote> => {
+	const url = `${BASE_URL}/random`;
+	const response = await fetch(url);
+	return response.json();
+};

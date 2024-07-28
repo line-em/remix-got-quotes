@@ -28,13 +28,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				<Links />
 			</head>
 			<body>
-				<main className="grid grid-rows-[auto_1fr] grid-cols-[minmax(150px,200px)_1fr] gap-y-2 w-full max-h-screen h-full">
-					<header className="col-span-2 pt-2 pb-2 bg-base-300 flex gap-4 align-center justify-center">
-						<Crown />
-						Game of Thrones Quotes
-					</header>
-					<nav className="flex flex-col gap-4 align-center justify-center h-[90vh]">
-						<div className="join join-vertical overflow-y-auto">
+				<main className="grid grid-cols-[minmax(150px,200px)_1fr] gap-y-2 w-full max-h-screen h-full">
+					<nav className="flex flex-col justify-center h-screen">
+						<div className="join join-vertical overflow-y-auto max-h-[80vh]">
 							{characters.map((character) => (
 								<button className="btn join-item" key={character}>
 									{character}

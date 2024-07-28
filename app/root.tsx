@@ -10,7 +10,7 @@ import {
 	useLoaderData
 } from "@remix-run/react";
 import "./tailwind.css";
-import { getCharacters } from "./data";
+import { findSlugByName, getCharacters } from "./data";
 import { ChangeEvent, useEffect, useState } from "react";
 import { sortBy } from "sort-by-typescript";
 
@@ -24,18 +24,13 @@ export const loader = async () => {
 
 export function Layout({ children }: { children: React.ReactNode }) {
 	const { characters, characterNames } = useLoaderData<typeof loader>();
-	const [filteredChars, setFilteredChars] = useState<string[]>(characterNames);
+	const [filteredNames, setFilteredNames] = useState<string[]>(characterNames);
 
 	const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value.toLowerCase();
-		setFilteredChars(
+		setFilteredNames(
 			characterNames.filter((char) => char.toLowerCase().includes(value))
 		);
-	};
-
-	const findSlugByName = (name: string): string => {
-		const character = characters.find((char) => char.name === name);
-		return character ? `quotes/${character.slug}` : "";
 	};
 
 	useEffect(() => {
@@ -68,9 +63,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 						</Form>
 						<ul className="menu menu-m bg-base-200 rounded-box overflow-y-scroll max-h-[40vh] sm:max-h-[80vh] flex-nowrap">
 							<li className="menu-title">Characters</li>
-							{filteredChars.length ? (
-								filteredChars.map((character) => (
-									<li className="" key={character}>
+							{filteredNames.length ? (
+								filteredNames.map((name) => (
+									<li className="" key={name}>
 										<NavLink
 											className={({ isActive, isPending }) =>
 												isActive
@@ -79,9 +74,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
 													? "pending"
 													: ""
 											}
-											to={findSlugByName(character)}
+											to={`quotes/${findSlugByName(
+												characters,
+												name
+											)}`}
 										>
-											{character}
+											{name}
 										</NavLink>
 									</li>
 								))

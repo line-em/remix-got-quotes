@@ -1,9 +1,9 @@
 type CharacterQuotes = {
 	name: string;
 	slug: string;
-	house: {
-		slug: string;
-		name: string;
+	house?: {
+		slug?: string;
+		name?: string;
 	};
 	quotes: string[];
 };
@@ -13,9 +13,9 @@ type RandomQuote = {
 	character: {
 		name: string;
 		slug: string;
-		house: {
-			name: string;
-			slug: string;
+		house?: {
+			name?: string;
+			slug?: string;
 		};
 	};
 };
@@ -32,18 +32,24 @@ export const getCharacters = async (): Promise<CharacterQuotes[]> => {
 	return data;
 };
 
-export const getCharacterQuote = async (character: string): Promise<CharacterQuotes> => {
+export const getCharacter = async (character: string): Promise<CharacterQuotes> => {
 	const url = `${BASE_URL}/character/${character}`;
 	const response = await fetch(url);
-	const data: CharacterQuotes = await response.json();
+	const data: CharacterQuotes[] = await response.json();
 	if (!data) {
 		throw new Response("Character not Found", { status: 404 });
 	}
-	return data;
+	return data[0];
 };
 
 export const getRandomQuote = async (): Promise<RandomQuote> => {
 	const url = `${BASE_URL}/random`;
 	const response = await fetch(url);
 	return response.json();
+};
+
+// utils
+export const findSlugByName = (data: CharacterQuotes[], name: string): string => {
+	const character = data.find((entry) => entry.name === name);
+	return character ? character.slug : "";
 };

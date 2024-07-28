@@ -1,5 +1,4 @@
 import { BookHeart } from "lucide-react";
-import React from "react";
 
 const Quotes = () => {
 	return (

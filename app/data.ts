@@ -1,5 +1,3 @@
-import { sortBy } from "sort-by-typescript";
-
 type CharacterQuotes = {
 	name: string;
 	slug: string;
@@ -24,14 +22,14 @@ type RandomQuote = {
 
 const BASE_URL = "https://api.gameofthronesquotes.xyz/v1";
 
-export const getCharacters = async (): Promise<string[]> => {
+export const getCharacters = async (): Promise<CharacterQuotes[]> => {
 	const url = `${BASE_URL}/characters`;
 	const response = await fetch(url);
 	const data: CharacterQuotes[] = await response.json();
 	if (!data) {
 		throw new Response("Characters not found", { status: 404 });
 	}
-	return data.map((character) => character.name).sort(sortBy("name"));
+	return data;
 };
 
 export const getCharacterQuote = async (character: string): Promise<CharacterQuotes> => {

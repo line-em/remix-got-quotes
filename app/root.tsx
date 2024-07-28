@@ -12,19 +12,30 @@ import {
 import "./tailwind.css";
 import { getCharacters } from "./data";
 import { ChangeEvent, useEffect, useState } from "react";
+import { sortBy } from "sort-by-typescript";
 
 export const loader = async () => {
 	const characters = await getCharacters();
-	return json(characters);
+	const characterNames = characters
+		.map((character) => character.name)
+		.sort(sortBy("name"));
+	return json({ characters, characterNames });
 };
 
 export function Layout({ children }: { children: React.ReactNode }) {
-	const characters = useLoaderData<typeof loader>();
-	const [filteredChars, setFilteredChars] = useState<string[]>(characters);
+	const { characters, characterNames } = useLoaderData<typeof loader>();
+	const [filteredChars, setFilteredChars] = useState<string[]>(characterNames);
 
 	const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value.toLowerCase();
-		setFilteredChars(characters.filter((char) => char.toLowerCase().includes(value)));
+		setFilteredChars(
+			characterNames.filter((char) => char.toLowerCase().includes(value))
+		);
+	};
+
+	const findSlugByName = (name: string): string => {
+		const character = characters.find((char) => char.name === name);
+		return character ? `quotes/${character.slug}` : "";
 	};
 
 	useEffect(() => {
@@ -57,24 +68,26 @@ export function Layout({ children }: { children: React.ReactNode }) {
 						</Form>
 						<ul className="menu menu-m bg-base-200 rounded-box overflow-y-scroll max-h-[40vh] sm:max-h-[80vh] flex-nowrap">
 							<li className="menu-title">Characters</li>
-							{filteredChars.length
-								? filteredChars.map((character) => (
-										<li className="" key={character}>
-											<NavLink
-												className={({ isActive, isPending }) =>
-													isActive
-														? "active"
-														: isPending
-														? "pending"
-														: ""
-												}
-												to={`quotes/${character}`}
-											>
-												{character}
-											</NavLink>
-										</li>
-								  ))
-								: "No characters found!"}
+							{filteredChars.length ? (
+								filteredChars.map((character) => (
+									<li className="" key={character}>
+										<NavLink
+											className={({ isActive, isPending }) =>
+												isActive
+													? "active"
+													: isPending
+													? "pending"
+													: ""
+											}
+											to={findSlugByName(character)}
+										>
+											{character}
+										</NavLink>
+									</li>
+								))
+							) : (
+								<li className="pb-2 pl-4">No characters found!</li>
+							)}
 						</ul>
 					</nav>
 					{children}
